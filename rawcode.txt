@@ -1,0 +1,70 @@
+PROJECT-3 (PYTHON)
+A Weather Client Using XML
+
+Sanjana Kudige Anish Kumar
+Student ID: 1001526215
+Subject: Distributed Systems
+
+
+from bs4 import BeautifulSoup
+import requests
+url = 'http://w1.weather.gov/xml/current_obs/index.xml'
+source_code = requests.get(url)
+soup = BeautifulSoup(source_code.content)
+lat = input("\nEnter Latitude:")
+long = input("\nEnter Longitude:")
+while True:
+    station=soup.findAll("station")
+    for stat in station:
+        l=stat.find('latitude').get_text()
+        if eval(lat)==eval(l):
+            lon=stat.find('longitude').get_text()
+            if eval(long)==eval(lon):
+                link=stat.find('xml_url').get_text()
+    try:
+        print(link)
+        ans1 = requests.get(link)
+        ans2 = BeautifulSoup(ans1.content)
+        try:
+            humidity=ans2.find("relative_humidity").get_text()
+        except AttributeError:
+            humidity="-"
+        try:
+            temperature=ans2.find("temperature_string").get_text()
+        except AttributeError:
+            temperature="-"
+        try:
+            dew_point=ans2.find("dewpoint_string").get_text()
+        except AttributeError:
+            dew_point="-"
+        try:
+            pressure=ans2.find("pressure_string").get_text()
+        except AttributeError:
+            pressure="-"
+        try:
+            wind=ans2.find("wind_string").get_text()
+        except AttributeError:
+            wind="-"
+        print('Humidity:',humidity,'\nTemperature:',temperature,'\nDew_Point:',dew_point,'\nPressure:',pressure,'\nWind:',wind)
+    except NameError:
+        print("Please Enter the Latitude and Longitude from the List Provided")
+        break
+    ans1.close()
+    check=input("Enter yes if you want to refresh the details or Enter no:")
+    if check!="yes":
+        ans1.close()
+        break
+
+
+
+
+
+REFERENCES: 
+https://stackoverflow.com/questions/36516183/what-should-i-use-instead-of-urlopen-in-urllib3
+https://stackoverflow.com/questions/22287023/scraping-xml-with-python-module-beautifulsoup-need-a-specific-tag-in-the-tree
+http://docs.python-guide.org/en/latest/scenarios/scrape/
+https://stackoverflow.com/questions/34467410/python-doesnt-have-permission-to-access-on-this-server-return-city-state-from
+https://stackoverflow.com/questions/15168765/how-to-get-value-of-variable-entered-from-user-input
+https://stackoverflow.com/questions/2081586/web-scraping-with-python
+https://stackoverflow.com/questions/10873295/error-message-forbidden-you-dont-have-permission-to-access-on-this-server
+https://stackoverflow.com/questions/3783238/python-database-connection-close
